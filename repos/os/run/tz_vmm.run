@@ -1,0 +1,72 @@
+#
+# \brief  Virtual-machine monitor demo
+# \author Stefan Kalkowski
+# \date   2012-06-25
+#
+
+assert_spec hw_imx53
+assert_spec trustzone
+
+build "core init server/tz_vmm"
+create_boot_directory
+
+install_config {
+<config verbose="yes">
+	<parent-provides>
+		<service name="ROM"/>
+		<service name="RAM"/>
+		<service name="IRQ"/>
+		<service name="IO_MEM"/>
+		<service name="CAP"/>
+		<service name="PD"/>
+		<service name="RM"/>
+		<service name="CPU"/>
+		<service name="LOG"/>
+		<service name="SIGNAL"/>
+		<service name="VM"/>
+	</parent-provides>
+	<default-route>
+		<any-service><any-child/><parent/></any-service>
+	</default-route>
+	<start name="tz_vmm">
+		<resource name="RAM" quantum="4M"/>
+	</start>
+</config>
+}
+
+set init_uri "http://genode.org/files/images/imx53_qsb/initrd.gz"
+set linux_uri "http://genode.org/files/images/imx53_qsb/linux_trustzone.bin"
+
+if {![file exists bin/initrd.gz]} {
+	puts "Download initramfs ..."
+	exec >& /dev/null wget -c -O bin/initrd.gz $init_uri
+}
+if {![file exists bin/linux]} {
+	puts "Download linux binary ..."
+	exec >& /dev/null wget -c -O bin/linux $linux_uri
+}
+exec >& /dev/null wget -O bin/initrd.gz.md5 $init_uri.md5
+exec >& /dev/null wget -O bin/linux.md5 $linux_uri.md5
+cd bin
+exec md5sum -c initrd.gz.md5
+exec md5sum -c linux.md5
+cd ..
+
+build_boot_image "core init tz_vmm linux initrd.gz"
+
+#
+# Execute test case
+#
+run_genode_until {.*\/ #.*} 220
+
+# Wait for network to settle down
+send "sleep 5\n"
+send "wget http://genode.org/\n"
+
+expect {
+	 -re "Connecting to genode.org.*index.html.*\/ #.*" { }
+	timeout { puts stderr "Error: Test execution timed out"; exit -2 }
+}
+
+puts "Test succeeded"
+exec rm bin/initrd.gz bin/initrd.gz.md5 bin/linux bin/linux.md5

@@ -1,0 +1,16 @@
+checking library dependencies...
+[00;33m  Library [0mplatform
+[00;33m  Library [0mbionic_libc_stdio
+[00;33m  Library [0mldso-startup
+[00;33m  Library [0msyscall
+[00;33m  Library [0mbase-common
+[00;33m  Library [0mstartup
+[00;33m  Library [0mcxx
+[00;33m  Library [0mbase
+[00;33m  Library [0malarm
+[00;33m  Library [0mtimed_semaphore
+[00;33m  Library [0mconfig
+[00;33m  Library [0mldso-arch
+[00;33m  Library [0mld
+[00;33m  Library [0mbionic_libc_x86
+    MERGE    bionic_libc_x86.lib.so

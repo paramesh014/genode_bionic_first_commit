@@ -1,0 +1,59 @@
+The patches in this directory are used to link the CPU Jitter random number
+generator with other libraries or applications. None of them alter or even
+apply to the code of the CPU Jitter random number generator.
+
+The following list explains which patches apply to what consumer.
+
+libgcrypt 1.6.0
+===============
+
+1. Set the compilation flag LIBGCRYPT in jitterentropy-base-user.h
+
+2. copy the following files to libgcrypt/random directory:
+	jitterentropy-base.c
+	jitterentropy.h
+	jitterentropy-base-user.h
+	jitterentropy-gcry-user.c (use either libgcrypt/jitterentropy-gcry.c
+		or libgcrypt/jitterentropy-gcry-stateless.c for this file)
+
+3. apply patch libgcrypt-jent-1.6.0.diff
+
+4. Use gcry_control(GCRYCTL_SET_CPU_JITTER_ENTROPY, 1) to enable it. Any
+   seeding or reseeding of the currently used random number generator uses
+   the CPU Jitter random number generator instead the /dev/?random file
+   on a Linux system.
+
+5. Use gcry_control(GCRYCTL_SET_CPU_JITTER_ENTROPY, 0) to disable it.
+   In this case, the operation reverts back to the old behavior of using
+   /dev/?random.
+
+OpenSSL 1.0.1
+=============
+
+1. Set the compilation flag OPENSSL in jitterentropy-base-user.h
+
+2. copy the following files to crypto/rand directory:
+	jitterentropy-base.c
+	jitterentropy.h
+	jitterentropy-base-user.h
+
+3. apply patch openssl-1.0.1c.patch
+
+Linux Kernel 3.13
+=================
+
+The patch is intended to connect the CPU Jitter RNG with /dev/random.
+
+1. copy the following files to the drivers/char directory:
+	jitterentropy-base.c
+	jitterentropy.h
+	jitterentropy-base-kernel.h
+
+2. apply patch linux-3.13-random.patch
+
+Linux Kernel Crypto API Patch
+=============================
+
+This patch is only needed to add a reseed mechanism to the ANSI X9.31
+DRNG. If this patch is applied, the commented out code path in
+jent_drng_update must be enabled.

@@ -1,0 +1,561 @@
+#
+# Library dependencies for build 'test/libports/bionic'
+#
+
+export SPEC_FILES := \
+  /home/paramesh/genode-14.08/repos/base-linux/mk/spec-linux_x86_64.mk \
+
+LIB_CACHE_DIR = /home/paramesh/genode-14.08/build.lx/var/libcache
+BASE_DIR      = /home/paramesh/genode-14.08/repos/base
+VERBOSE      ?= @
+VERBOSE_MK   ?= @
+VERBOSE_DIR  ?= --no-print-directory
+INSTALL_DIR  ?= /home/paramesh/genode-14.08/build.lx/bin
+SHELL        ?= /bin/bash
+MKDIR        ?= mkdir
+
+all:
+	@true # prevent nothing-to-be-done message
+
+DEP_test-bionic.prg = bionic.lib $(DEP_bionic.lib)
+
+test-bionic.prg: bionic.lib
+	@$(MKDIR) -p test/libports/bionic
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C test/libports/bionic -f $(BASE_DIR)/mk/prg.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     PRG_REL_DIR=test/libports/bionic \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     DEPS="$(DEP_test-bionic.prg)" \
+	     SHELL=/bin/bash \
+	     INSTALL_DIR="$(INSTALL_DIR)"
+
+DEP_bionic.lib.so = bionic_c.lib $(DEP_bionic_c.lib) ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic.lib: bionic_c.lib ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic.mk \
+	     LIB=bionic \
+	     DEPS="$(DEP_bionic.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_bionic_c.lib.so = bionic_stack_protector.lib $(DEP_bionic_stack_protector.lib) bionic_libc_tzcode.lib $(DEP_bionic_libc_tzcode.lib) bionic_libc_openbsd.lib $(DEP_bionic_libc_openbsd.lib) bionic_libc_freebsd.lib $(DEP_bionic_libc_freebsd.lib) bionic_libc_netbsd.lib $(DEP_bionic_libc_netbsd.lib) bionic_libc_dns.lib $(DEP_bionic_libc_dns.lib) bionic_libc_gdtoa.lib $(DEP_bionic_libc_gdtoa.lib) bionic_libc-aeabi.lib $(DEP_bionic_libc-aeabi.lib) binoic_libc_common.lib $(DEP_binoic_libc_common.lib) bionic_libc_syscalls.lib $(DEP_bionic_libc_syscalls.lib) bionic_libc_bionic.lib $(DEP_bionic_libc_bionic.lib) bionic_libc_nomalloc.lib $(DEP_bionic_libc_nomalloc.lib) bionic_libc_x86.lib $(DEP_bionic_libc_x86.lib) bionic_libc_malloc.lib $(DEP_bionic_libc_malloc.lib) bionic_libc_libc.lib $(DEP_bionic_libc_libc.lib) bionic_libc_libc_so.lib $(DEP_bionic_libc_libc_so.lib) bionic_libc.lib $(DEP_bionic_libc.lib) bionic_libc_malloc_debug_leak.lib $(DEP_bionic_libc_malloc_debug_leak.lib) bionic_libc_malloc_debug_qemu.lib $(DEP_bionic_libc_malloc_debug_qemu.lib) bionic_libstdc++.lib $(DEP_bionic_libstdc++.lib) bionic_libdl.lib $(DEP_bionic_libdl.lib) ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_c.lib: bionic_stack_protector.lib bionic_libc_tzcode.lib bionic_libc_openbsd.lib bionic_libc_freebsd.lib bionic_libc_netbsd.lib bionic_libc_dns.lib bionic_libc_gdtoa.lib bionic_libc-aeabi.lib binoic_libc_common.lib bionic_libc_syscalls.lib bionic_libc_bionic.lib bionic_libc_nomalloc.lib bionic_libc_x86.lib bionic_libc_malloc.lib bionic_libc_libc.lib bionic_libc_libc_so.lib bionic_libc.lib bionic_libc_malloc_debug_leak.lib bionic_libc_malloc_debug_qemu.lib bionic_libstdc++.lib bionic_libdl.lib ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_c
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_c -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_c.mk \
+	     LIB=bionic_c \
+	     DEPS="$(DEP_bionic_c.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_bionic_stack_protector.lib = platform.lib $(DEP_platform.lib)
+
+bionic_stack_protector.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_stack_protector
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_stack_protector -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_stack_protector.mk \
+	     LIB=bionic_stack_protector \
+	     DEPS="$(DEP_bionic_stack_protector.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+platform.lib: 
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/platform
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/platform -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base/lib/mk/platform.mk \
+	     LIB=platform \
+	     DEPS="$(DEP_platform.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_bionic_libc_tzcode.lib = platform.lib $(DEP_platform.lib)
+
+bionic_libc_tzcode.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_tzcode
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_tzcode -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_tzcode.mk \
+	     LIB=bionic_libc_tzcode \
+	     DEPS="$(DEP_bionic_libc_tzcode.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_bionic_libc_openbsd.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_openbsd.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_openbsd
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_openbsd -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_openbsd.mk \
+	     LIB=bionic_libc_openbsd \
+	     DEPS="$(DEP_bionic_libc_openbsd.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_ldso-startup.lib = platform.lib $(DEP_platform.lib)
+
+ldso-startup.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/ldso-startup
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/ldso-startup -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/ldso-startup.mk \
+	     LIB=ldso-startup \
+	     DEPS="$(DEP_ldso-startup.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_ld.lib.so = base-common.lib $(DEP_base-common.lib) base.lib $(DEP_base.lib) startup.lib $(DEP_startup.lib) cxx.lib $(DEP_cxx.lib) timed_semaphore.lib $(DEP_timed_semaphore.lib) alarm.lib $(DEP_alarm.lib) config.lib $(DEP_config.lib) syscall.lib $(DEP_syscall.lib) ldso-arch.lib $(DEP_ldso-arch.lib) ldso-startup.lib $(DEP_ldso-startup.lib)
+
+ld.lib: base-common.lib base.lib startup.lib cxx.lib timed_semaphore.lib alarm.lib config.lib syscall.lib ldso-arch.lib ldso-startup.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/ld
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/ld -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/x86_64/ld.mk \
+	     LIB=ld \
+	     DEPS="$(DEP_ld.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_base-common.lib = syscall.lib $(DEP_syscall.lib)
+
+base-common.lib: syscall.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/base-common
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/base-common -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base-linux \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base-linux/lib/mk/base-common.mk \
+	     LIB=base-common \
+	     DEPS="$(DEP_base-common.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_syscall.lib = platform.lib $(DEP_platform.lib)
+
+syscall.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/syscall
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/syscall -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base-linux \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base-linux/lib/mk/x86_64/syscall.mk \
+	     LIB=syscall \
+	     DEPS="$(DEP_syscall.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_base.lib = startup.lib $(DEP_startup.lib) cxx.lib $(DEP_cxx.lib) base-common.lib $(DEP_base-common.lib) syscall.lib $(DEP_syscall.lib) cxx.lib $(DEP_cxx.lib)
+
+base.lib: startup.lib cxx.lib base-common.lib syscall.lib cxx.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/base
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/base -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base-linux \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base-linux/lib/mk/x86/base.mk \
+	     LIB=base \
+	     DEPS="$(DEP_base.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_startup.lib = syscall.lib $(DEP_syscall.lib)
+
+startup.lib: syscall.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/startup
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/startup -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base/lib/mk/x86_64/startup.mk \
+	     LIB=startup \
+	     DEPS="$(DEP_startup.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_cxx.lib = platform.lib $(DEP_platform.lib)
+
+cxx.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/cxx
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/cxx -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base/lib/mk/cxx.mk \
+	     LIB=cxx \
+	     DEPS="$(DEP_cxx.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_timed_semaphore.lib = alarm.lib $(DEP_alarm.lib)
+
+timed_semaphore.lib: alarm.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/timed_semaphore
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/timed_semaphore -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/timed_semaphore.mk \
+	     LIB=timed_semaphore \
+	     DEPS="$(DEP_timed_semaphore.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_alarm.lib = platform.lib $(DEP_platform.lib)
+
+alarm.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/alarm
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/alarm -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/alarm.mk \
+	     LIB=alarm \
+	     DEPS="$(DEP_alarm.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_config.lib = platform.lib $(DEP_platform.lib)
+
+config.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/config
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/config -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/config.mk \
+	     LIB=config \
+	     DEPS="$(DEP_config.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_ldso-arch.lib = platform.lib $(DEP_platform.lib)
+
+ldso-arch.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/ldso-arch
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/ldso-arch -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/linux/ldso-arch.mk \
+	     LIB=ldso-arch \
+	     DEPS="$(DEP_ldso-arch.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += ld
+
+SHARED_LIBS += bionic_libc_openbsd
+
+DEP_bionic_libc_freebsd.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_freebsd.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_freebsd
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_freebsd -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_freebsd.mk \
+	     LIB=bionic_libc_freebsd \
+	     DEPS="$(DEP_bionic_libc_freebsd.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc_freebsd
+
+DEP_bionic_libc_netbsd.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_netbsd.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_netbsd
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_netbsd -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_netbsd.mk \
+	     LIB=bionic_libc_netbsd \
+	     DEPS="$(DEP_bionic_libc_netbsd.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc_netbsd
+
+DEP_bionic_libc_dns.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_dns.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_dns
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_dns -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_dns.mk \
+	     LIB=bionic_libc_dns \
+	     DEPS="$(DEP_bionic_libc_dns.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc_dns
+
+DEP_bionic_libc_gdtoa.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_gdtoa.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_gdtoa
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_gdtoa -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_gdtoa.mk \
+	     LIB=bionic_libc_gdtoa \
+	     DEPS="$(DEP_bionic_libc_gdtoa.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc_gdtoa
+
+DEP_bionic_libc-aeabi.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc-aeabi.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc-aeabi
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc-aeabi -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc-aeabi.mk \
+	     LIB=bionic_libc-aeabi \
+	     DEPS="$(DEP_bionic_libc-aeabi.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc-aeabi
+
+DEP_binoic_libc_common.lib.so = bionic_libc_openbsd.lib $(DEP_bionic_libc_openbsd.lib) bionic_libc_freebsd.lib $(DEP_bionic_libc_freebsd.lib) ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+binoic_libc_common.lib: bionic_libc_openbsd.lib bionic_libc_freebsd.lib ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/binoic_libc_common
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/binoic_libc_common -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/binoic_libc_common.mk \
+	     LIB=binoic_libc_common \
+	     DEPS="$(DEP_binoic_libc_common.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += binoic_libc_common
+
+DEP_bionic_libc_syscalls.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_syscalls.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_syscalls
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_syscalls -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_syscalls.mk \
+	     LIB=bionic_libc_syscalls \
+	     DEPS="$(DEP_bionic_libc_syscalls.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc_syscalls
+
+DEP_bionic_libc_bionic.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_bionic.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_bionic
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_bionic -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_bionic.mk \
+	     LIB=bionic_libc_bionic \
+	     DEPS="$(DEP_bionic_libc_bionic.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc_bionic
+
+DEP_bionic_libc_nomalloc.lib.so = bionic_libc_bionic.lib $(DEP_bionic_libc_bionic.lib) ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_nomalloc.lib: bionic_libc_bionic.lib ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_nomalloc
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_nomalloc -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_nomalloc.mk \
+	     LIB=bionic_libc_nomalloc \
+	     DEPS="$(DEP_bionic_libc_nomalloc.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc_nomalloc
+
+DEP_bionic_libc_x86.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_x86.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_x86
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_x86 -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_x86.mk \
+	     LIB=bionic_libc_x86 \
+	     DEPS="$(DEP_bionic_libc_x86.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc_x86
+
+DEP_bionic_libc_malloc.lib = platform.lib $(DEP_platform.lib)
+
+bionic_libc_malloc.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_malloc
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_malloc -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_malloc.mk \
+	     LIB=bionic_libc_malloc \
+	     DEPS="$(DEP_bionic_libc_malloc.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_bionic_libc_libc.lib = platform.lib $(DEP_platform.lib)
+
+bionic_libc_libc.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_libc
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_libc -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_libc.mk \
+	     LIB=bionic_libc_libc \
+	     DEPS="$(DEP_bionic_libc_libc.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_bionic_libc_libc_so.lib.so = bionic_libc_tzcode.lib $(DEP_bionic_libc_tzcode.lib) ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_libc_so.lib: bionic_libc_tzcode.lib ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_libc_so
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_libc_so -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_libc_so.mk \
+	     LIB=bionic_libc_libc_so \
+	     DEPS="$(DEP_bionic_libc_libc_so.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc_libc_so
+
+DEP_bionic_libc.lib = bionic_libc_tzcode.lib $(DEP_bionic_libc_tzcode.lib)
+
+bionic_libc.lib: bionic_libc_tzcode.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc.mk \
+	     LIB=bionic_libc \
+	     DEPS="$(DEP_bionic_libc.lib)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_bionic_libc_malloc_debug_leak.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_malloc_debug_leak.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_malloc_debug_leak
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_malloc_debug_leak -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_malloc_debug_leak.mk \
+	     LIB=bionic_libc_malloc_debug_leak \
+	     DEPS="$(DEP_bionic_libc_malloc_debug_leak.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc_malloc_debug_leak
+
+DEP_bionic_libc_malloc_debug_qemu.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libc_malloc_debug_qemu.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libc_malloc_debug_qemu
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libc_malloc_debug_qemu -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_malloc_debug_qemu.mk \
+	     LIB=bionic_libc_malloc_debug_qemu \
+	     DEPS="$(DEP_bionic_libc_malloc_debug_qemu.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libc_malloc_debug_qemu
+
+DEP_bionic_libstdc++.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libstdc++.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libstdc++
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libstdc++ -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libstdc++.mk \
+	     LIB=bionic_libstdc++ \
+	     DEPS="$(DEP_bionic_libstdc++.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libstdc++
+
+DEP_bionic_libdl.lib.so = ldso-startup.lib $(DEP_ldso-startup.lib) ld.lib $(DEP_ld.lib)
+
+bionic_libdl.lib: ldso-startup.lib ld.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/bionic_libdl
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/bionic_libdl -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libdl.mk \
+	     LIB=bionic_libdl \
+	     DEPS="$(DEP_bionic_libdl.lib.so)" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/build.lx \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+SHARED_LIBS += bionic_libdl
+
+SHARED_LIBS += bionic_c
+
+SHARED_LIBS += bionic
+
+
+ifeq ($(filter $(DEP_test-bionic.prg:.lib=),$(INVALID_DEPS)),)
+all: test-bionic.prg
+endif

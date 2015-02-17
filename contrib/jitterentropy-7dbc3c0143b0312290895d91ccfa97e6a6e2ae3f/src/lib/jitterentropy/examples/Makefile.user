@@ -1,0 +1,32 @@
+# Compile Noise Source as user space application
+
+CC=gcc
+# do NOT protect the RNG state as this is a test program
+override CFLAGS +=-pedantic -Wall -DCONFIG_CRYPTO_CPU_JITTERENTROPY_SECURE_MEMORY -pie -fPIE -Wl,-z,relro,-z,now -ggdb
+
+NAME := jitterentropy
+#C_SRCS := $(wildcard *.c) 
+C_SRCS := jitterentropy-base.c jitterentropy-main-user.c
+C_OBJS := ${C_SRCS:.c=.o}
+OBJS := $(C_OBJS)
+
+INCLUDE_DIRS :=
+LIBRARY_DIRS :=
+LIBRARIES := rt
+
+CFLAGS += $(foreach includedir,$(INCLUDE_DIRS),-I$(includedir))
+LDFLAGS += $(foreach librarydir,$(LIBRARY_DIRS),-L$(librarydir))
+LDFLAGS += $(foreach library,$(LIBRARIES),-l$(library))
+
+.PHONY: all clean distclean
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
+
+clean:
+	@- $(RM) $(NAME)
+	@- $(RM) $(OBJS)
+
+distclean: clean

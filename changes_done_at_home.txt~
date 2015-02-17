@@ -1,0 +1,83 @@
+in /libc/private/bionic_atomic_inline.h
+		line 32  added #define ANDROID_SMP
+		
+in /libc/bionic/malloc_debug_common.cpp 
+		line 49 added #define USE_JEMALLOC
+		
+in /libc/bionic/malloc_debug_leak.cpp
+		line 59 added #define MALLOC_LEAK_CHECK
+in /libc/dns/nameser/ns_parse.c , /ns_name.c , /ns_print.c /ns_ttl.c, /resolv/res_debug.c
+	added #include <netbsd-compat.h> // paramesh 
+	added include <resolv_private.h> // paramesh 
+in /libc/dns/resolv/res_init.c, /res_mkquery.c
+	added #define ANDROID_CHANGES  // paramesh 
+	
+in __cxa_guard.cpp
+	added #define __i386__ //paramesh
+in /libc/include/unistd
+	added #define _GNU_SOURCE //paramesh
+
+in /libc/bionic/semaphore.c
+	added #define ANDROID_SMP //paramesh
+	
+problem in libc_bionic 
+
+in /libc/include/sched.h
+	copied extern int clone(int (*)(void*), void*, int, void*, ...); from line 57 to 55
+	
+in /libc/include/unistd.h
+	line 149 and 151 '//' is added (to make it as comment lines)
+	
+in /libm/upstream-freebsd/lib/msun/src/ s_cosl.c, s_sinl.c s_tanl.c
+        line 42	#define LDBL_MANT_DIG  113 //paramesh
+        line 44 //#include "../ld80/e_rem_pio2l.h" //paramesh commented
+ in /libc/bionic
+        line 34 #define __ANDROID__ //paramesh
+in /libc/bionic
+        #define USE_DLMALLOC //paramesh
+in /libc/tzcode
+        line 58,60,61,62,63,64,66 commented
+        
+in arc4random.c
+	commented 34,103	
+
+::: Errors :::
+
+::: multiple definition error :::
+If you put a definition of a global variable in a header file, then this definition will go to every .c file that includes this header, and you will get multiple definition error because a varible may be declared multiple times but can be defined only once.
+
+
+::: Linker Error :::
+::: bionic_libc_x86/bionic_libc_x86.lib.a(syscall.o): relocation R_X86_64_PC32 against undefined symbol `__set_errno' can not be used when making a shared object; recompile with -fPIC :::
+The R_X86_64_32S and R_X86_64_64 are names for relocation types for code compiled for the amd64 architecture. You can look all of them up in the amd64 ABI. According to it, R_X86_64_64 is broken down to:
+
+    R_X86_64 - all names are prefixed with this
+    64 - Direct 64 bit relocation
+
+and R_X86_64_32S to:
+
+    R_X86_64 - prefix
+    32S - truncate value to 32 bits and sign-extend
+
+which basically means "the value of the symbol pointed to by this relocation, plus any addend", in both cases. For R_X86_64_32S the linker then verifies that the generated value sign-extends to the original 64-bit value.
+
+Now, in an executable file, the code and data segments are given a specified virtual base address. The executable code is not shared, and each executable gets its own fresh address space. This means that the compiler knows exactly where the data section will be, and can reference it directly. Libraries, on the other hand, can only know that their data section will be at a specified offset from the base address; the value of that base address can only be known at runtime. Hence, all libraries must be produced with code that can execute no matter where it is put into memory, known as position independent code (or PIC for short).
+
+
+
+:: warning: implicit declaration of function ::
+You are using a function for which the compiler has not seen a declaration ("prototype") yet.
+solution: You need to declare your function before main, like this, either directly or in a header:
+
+
+
+:: multiple definition of funtion x - error :: 
+the file consisting of the function x had been included twice in the compilation.
+
+
+libdl
+
+
+
+
+You can use the __cplusplus preprocessor symbol to create a header that's valid for either language:

@@ -1,0 +1,99 @@
+LICENSE   := BSD
+VERSION   := 1.2.8
+DOWNLOADS := bionic.archive
+
+URL(bionic) :=file:///home/paramesh/Desktop/bionic/bionic.tar.gz
+SHA(bionic) :=fa5868ea28d710315f5edb00d65bd49b72096506
+DIR(bionic) := src/lib/bionic
+
+#PATCHES := src/lib/sdl_net/SDLnet.patch src/lib/sdl_net/SDL_net.h.patch
+
+
+DIRS := include/bionic
+DIR_CONTENT(include/bionic) := \
+    $(addprefix src/lib/bionic/libc/include/,\
+                *.h)  
+
+   
+DIRS += include/bionic/sys
+DIR_CONTENT(include/bionic/sys) := \
+    $(addprefix src/lib/bionic/libc/include/sys/,\
+    		*.h) \
+    $(addprefix src/lib/bionic/libc/upstream-netbsd/android/include/sys/,\
+    		*.h) 
+
+DIRS += include/bionic/netpacket
+DIR_CONTENT(include/bionic/netpacket) := \
+    $(addprefix src/lib/bionic/libc/include/netpacket/,\
+    		*.h)
+    		
+DIRS += include/bionic/netinet
+DIR_CONTENT(include/bionic/netinet) := \
+    $(addprefix src/lib/bionic/libc/include/netinet/,\
+    		*.h)
+
+DIRS += include/bionic/net
+DIR_CONTENT(include/bionic/net) := \
+    $(addprefix src/lib/bionic/libc/include/net/,\
+    		*.h)
+
+DIRS += include/bionic/machine
+DIR_CONTENT(include/bionic/machine) := \
+    $(addprefix src/lib/bionic/libc/include/machine/,\
+    		*.h)
+DIRS += include/bionic/arpa
+DIR_CONTENT(include/bionic/arpa) := \
+    $(addprefix src/lib/bionic/libc/include/arpa/,\
+    		*.h)
+
+DIRS += include/bionic/android
+DIR_CONTENT(include/bionic/android) := \
+    $(addprefix src/lib/bionic/libc/include/android/,\
+    		*.h)
+    		
+    		
+# architecture specific headers
+
+DIR_CONTENT(include/bionic/machine) += \
+    $(addprefix src/lib/bionic/libc/arch-x86/include/machine/,\
+    		*.h)
+
+
+#private headers
+DIR_CONTENT(include/bionic/) += \
+    $(addprefix src/lib/bionic/libc/private/,\
+    		*.h) \
+    $(addprefix src/lib/bionic/libc/stdio/,\
+    		*.h) \
+    $(addprefix src/lib/bionic/libc/tzcode/,\
+    		*.h)
+    
+    		
+# BSD headers
+DIR_CONTENT(include/bionic/android) += \
+    $(addprefix src/lib/bionic/libc/upstream-freebsd/android/include/,\
+    		*.h) \
+    $(addprefix src/lib/bionic/libc/upstream-openbsd/android/include/,\
+    		*.h)
+DIR_CONTENT(include/bionic/) += \
+     $(addprefix src/lib/bionic/libc/upstream-netbsd/lib/libc/include/isc/,\
+    		*.h) \
+     $(addprefix src/lib/bionic/libc/upstream-netbsd/lib/libc/include/,\
+    		*.h) \
+    $(addprefix src/lib/bionic/libc/upstream-openbsd/lib/libc/include/,\
+    		*.h) \	
+   # $(addprefix src/lib/bionic/libc/upstream-netbsd/lib/android/include/,\
+    #		*.h) 
+
+
+#libm headers
+DIR_CONTENT(include/bionic/) += \
+     $(addprefix src/lib/bionic/libm/include/,\
+    		*.h) \
+    $(addprefix src/lib/bionic/libm/,\
+    		*.h)
+    		
+DIR_CONTENT(include/bionic/machine) += \
+     $(addprefix src/lib/bionic/libm/include/i387/machine/,\
+    		fenv.h)
+

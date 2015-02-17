@@ -1,0 +1,11 @@
+User space files
+----------------
+
+jitterentropy-gcry.c -- wrapper layer for integrating the CPU Jitter random
+			number generator into the libgcrypt library.
+
+jitterentropy-gcry-stateless.c
+		     -- wrapper layer for integrating the stateless
+			implementation of the CPU Jitter random number
+			generator into the libgrypt library
+

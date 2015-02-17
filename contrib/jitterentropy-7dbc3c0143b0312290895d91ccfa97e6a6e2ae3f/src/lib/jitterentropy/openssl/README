@@ -1,0 +1,18 @@
+CPU Jitter random number generator OpenSSL Engine support
+=========================================================
+
+The following engines are available:
+
+jitterentropy-raw -- direct access to the CPU Jitter random number generator
+
+jitterentropy-drng -- access to the OpenSSL default DRNG which is seeded
+		      with 16 bytes from the CPU Jitter random number generator
+		      after 1<<10 and with 48 bytes after 1<<20 bytes.
+
+jitterentropy-strong -- access to the OpenSSL default DRNG which is seeded
+			with 16 bytes from the CPU Jitter random number
+			generator after 16 and with 48 bytes after 1<<10 bytes.
+
+
+The jitterentropy-drng and jitterentropy-strong engines can be registered
+as default RNGs with ENGINE_set_default_RAND.

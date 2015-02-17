@@ -1,0 +1,189 @@
+diff -urNp linux-3.13/drivers/char/Makefile linux-3.13-jent/drivers/char/Makefile
+--- linux-3.13/drivers/char/Makefile	2014-01-20 03:40:07.000000000 +0100
++++ linux-3.13-jent/drivers/char/Makefile	2014-01-29 04:47:50.712597700 +0100
+@@ -2,7 +2,8 @@
+ # Makefile for the kernel character device drivers.
+ #
+ 
+-obj-y				+= mem.o random.o
++obj-y				+= mem.o random.o jitterentropy-base.o
++CFLAGS_jitterentropy-base.o	= -O0
+ obj-$(CONFIG_TTY_PRINTK)	+= ttyprintk.o
+ obj-y				+= misc.o
+ obj-$(CONFIG_ATARI_DSP56K)	+= dsp56k.o
+diff -urNp linux-3.13/drivers/char/random.c linux-3.13-jent/drivers/char/random.c
+--- linux-3.13/drivers/char/random.c	2014-01-20 03:40:07.000000000 +0100
++++ linux-3.13-jent/drivers/char/random.c	2014-01-30 03:30:35.761706012 +0100
+@@ -267,6 +267,8 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/random.h>
+ 
++#include "jitterentropy.h"
++
+ /*
+  * Configuration information
+  */
+@@ -430,19 +432,23 @@ struct entropy_store {
+ 	unsigned int limit:1;
+ 	unsigned int last_data_init:1;
+ 	__u8 last_data[EXTRACT_SIZE];
++	struct rand_data jent_ec;
+ };
+ 
+ static void push_to_pool(struct work_struct *work);
+ static __u32 input_pool_data[INPUT_POOL_WORDS];
+ static __u32 blocking_pool_data[OUTPUT_POOL_WORDS];
+ static __u32 nonblocking_pool_data[OUTPUT_POOL_WORDS];
++static unsigned char input_jentmem[JENT_MEMORY_SIZE];
+ 
+ static struct entropy_store input_pool = {
+ 	.poolinfo = &poolinfo_table[0],
+ 	.name = "input",
+ 	.limit = 1,
+ 	.lock = __SPIN_LOCK_UNLOCKED(input_pool.lock),
+-	.pool = input_pool_data
++	.pool = input_pool_data,
++	.jent_ec.mem = input_jentmem,
++	.jent_ec.memblocks = 0,
+ };
+ 
+ static struct entropy_store blocking_pool = {
+@@ -454,6 +460,7 @@ static struct entropy_store blocking_poo
+ 	.pool = blocking_pool_data,
+ 	.push_work = __WORK_INITIALIZER(blocking_pool.push_work,
+ 					push_to_pool),
++	.jent_ec.mem = NULL,
+ };
+ 
+ static struct entropy_store nonblocking_pool = {
+@@ -464,6 +471,7 @@ static struct entropy_store nonblocking_
+ 	.pool = nonblocking_pool_data,
+ 	.push_work = __WORK_INITIALIZER(nonblocking_pool.push_work,
+ 					push_to_pool),
++	.jent_ec.mem = NULL,
+ };
+ 
+ static __u32 const twist_table[8] = {
+@@ -715,6 +723,79 @@ static void credit_entropy_bits_safe(str
+  *
+  *********************************************************************/
+ 
++/* This function CANNOT be called from init_std_data to mix the pad further
++ * at initialization time, because the high-resolution clocksource drivers
++ * are loaded during module_init() time, just as init_std_data. Thus, there
++ * is no guarantee that the clocksource drivers are available for us.
++ */
++static void add_jent_randomness(struct entropy_store *r, int bytes)
++{
++#define JENT_BUFFER 64 /* ensure that JENT_BUFFER is a multiple of
++			* the CPU Jitter RNG block size */
++	char rand[JENT_BUFFER];
++	int ret = 0;
++	int entropy_count = 0;
++	unsigned long flags;
++
++	/* the initialization process determined that we cannot use the
++	 * CPU Jitter RNG or the caller provided wrong input */
++	if(NULL == r->jent_ec.mem || 0 >= bytes)
++		return;
++
++	/* only use the Jitter RNG if we fall to the low threshold as
++	 * otherwise the Jitter RNG monopolizes the noise sources */
++	entropy_count = ACCESS_ONCE(r->entropy_count);
++	entropy_count = entropy_count >> (ENTROPY_SHIFT);
++	if (entropy_count > random_read_wakeup_thresh)
++		return;
++
++	memset(rand, 0, JENT_BUFFER);
++	spin_lock_irqsave(&r->lock, flags);
++	if(0 == r->jent_ec.memblocks)
++	{
++		/* we are uninitialized, try to initialize */
++		if(jent_entropy_init())
++		{
++			/* there is no CPU Jitter, disable the collector */
++			r->jent_ec.mem = NULL;
++			spin_unlock_irqrestore(&r->lock, flags);
++			return;
++		}
++		r->jent_ec.data = 0;
++		r->jent_ec.prev_time = 0;
++		r->jent_ec.old_data = 0;
++		r->jent_ec.fips_fail = 0;
++		r->jent_ec.stir = 0;
++		r->jent_ec.disable_unbias = 0;
++		r->jent_ec.osr = 1;
++		/* r->jent_ec.mem does not need to be zeroized */
++		r->jent_ec.memblocksize = JENT_MEMORY_BLOCKSIZE;
++		r->jent_ec.memblocks = JENT_MEMORY_BLOCKS;
++		r->jent_ec.memaccessloops = JENT_MEMORY_ACCESSLOOPS;
++		/* fill the entropy collector and init the FIPS test
++		 * by pulling one round from the RNG */
++		jent_read_entropy(&r->jent_ec, rand, (DATA_SIZE_BITS / 8));
++	}
++
++	/* never pull more bytes than available in temp variable */
++	ret = min_t(int, bytes, JENT_BUFFER);
++#define JENT_WRAP (DATA_SIZE_BITS / 8 - 1)
++	/* round up number of bytes to be pulled to next multiple of
++	 * CPU Jitter RNG block size to be efficient */
++	ret = (ret + JENT_WRAP) &~ JENT_WRAP;
++
++	ret = jent_read_entropy(&r->jent_ec, rand, ret);
++	spin_unlock_irqrestore(&r->lock, flags);
++	if(0 < ret)
++	{
++		/* we do not need to worry about trickle threshold as we are
++		 * called when we are low on entropy */
++		mix_pool_bytes(r, rand, ret, NULL);
++		credit_entropy_bits(r, ret * 8);
++	}
++	memset(rand, 0, JENT_BUFFER);
++}
++
+ /* There is one of these per entropy source */
+ struct timer_rand_state {
+ 	cycles_t last_time;
+@@ -935,6 +1016,7 @@ static void _xfer_secondary_pool(struct
+ 
+ 	trace_xfer_secondary_pool(r->name, bytes * 8, nbytes * 8,
+ 				  ENTROPY_BITS(r), ENTROPY_BITS(r->pull));
++	add_jent_randomness(r->pull, bytes);
+ 	bytes = extract_entropy(r->pull, tmp, bytes,
+ 				random_read_wakeup_thresh / 8, rsvd);
+ 	mix_pool_bytes(r, tmp, bytes, NULL);
+@@ -1619,6 +1701,34 @@ struct ctl_table random_table[] = {
+ 		.mode		= 0444,
+ 		.proc_handler	= proc_do_uuid,
+ 	},
++	{
++		.procname	= "jent_memblocksize",
++		.maxlen		= sizeof(int),
++		.mode		= 0444,
++		.proc_handler	= proc_dointvec,
++		.data		= &input_pool.jent_ec.memblocksize,
++	},
++	{
++		.procname	= "jent_memblocks",
++		.maxlen		= sizeof(int),
++		.mode		= 0444,
++		.proc_handler	= proc_dointvec,
++		.data		= &input_pool.jent_ec.memblocks,
++	},
++	{
++		.procname	= "jent_memaccessloops",
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.data		= &input_pool.jent_ec.memaccessloops,
++	},
++	{
++		.procname	= "jent_osr",
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.data		= &input_pool.jent_ec.osr,
++	},
+ 	{ }
+ };
+ #endif 	/* CONFIG_SYSCTL */

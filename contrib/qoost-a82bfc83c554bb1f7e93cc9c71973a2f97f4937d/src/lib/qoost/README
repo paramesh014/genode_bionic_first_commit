@@ -1,0 +1,10 @@
+Qoost is a collection of C++ classes and templates for programming
+Qt4. The documentation is located in the respective source files.
+
+For suggestions, bugs, or discussions refer to our Sourceforge project
+at http://sourceforge.net/projects/qoost/. You may also contact the
+authors of Qoost at Genode Labs GmbH via email to qoost@genode-labs.com.
+
+Qoost is (C) 2011 by secunet Security Networks AG and distributed
+under the terms of the MIT license (see LICENSE file or
+http://www.opensource.org/licenses/mit-license.php).

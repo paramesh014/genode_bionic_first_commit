@@ -1,0 +1,154 @@
+checking library dependencies...
+\
+	for target in test/libports/bionic/target.mk; do \
+	  for rep in /home/paramesh/genode-14.08/repos/base-linux /home/paramesh/genode-14.08/repos/base /home/paramesh/genode-14.08/repos/os /home/paramesh/genode-14.08/repos/demo /home/paramesh/genode-14.08/repos/libports; do \
+	    test -f $rep/src/$target || continue; \
+	    make --no-print-directory -f /home/paramesh/genode-14.08/repos/base/mk/dep_prg.mk \
+	            REP_DIR=$rep TARGET_MK=$rep/src/$target \
+	            BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	            SHELL=/bin/bash \
+	            DARK_COL="\033[00;33m" DEFAULT_COL="\033[0m" || result=false; \
+	    break; \
+	  done; \
+	done; $result;
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/platform -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base/lib/mk/platform.mk \
+	     LIB=platform \
+	     DEPS="" \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mplatform
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/bionic_libc_stdio -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_stdio.mk \
+	     LIB=bionic_libc_stdio \
+	     DEPS="platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mbionic_libc_stdio
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/ldso-startup -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/ldso-startup.mk \
+	     LIB=ldso-startup \
+	     DEPS="platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mldso-startup
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/syscall -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base-linux \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base-linux/lib/mk/x86_64/syscall.mk \
+	     LIB=syscall \
+	     DEPS="platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0msyscall
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/base-common -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base-linux \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base-linux/lib/mk/base-common.mk \
+	     LIB=base-common \
+	     DEPS="syscall.lib platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mbase-common
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/startup -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base/lib/mk/x86_64/startup.mk \
+	     LIB=startup \
+	     DEPS="syscall.lib platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mstartup
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/cxx -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base/lib/mk/cxx.mk \
+	     LIB=cxx \
+	     DEPS="platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mcxx
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/base -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/base-linux \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/base-linux/lib/mk/x86/base.mk \
+	     LIB=base \
+	     DEPS="startup.lib syscall.lib platform.lib  cxx.lib platform.lib  base-common.lib syscall.lib platform.lib  syscall.lib platform.lib  cxx.lib platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mbase
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/alarm -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/alarm.mk \
+	     LIB=alarm \
+	     DEPS="platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0malarm
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/timed_semaphore -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/timed_semaphore.mk \
+	     LIB=timed_semaphore \
+	     DEPS="alarm.lib platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mtimed_semaphore
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/config -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/config.mk \
+	     LIB=config \
+	     DEPS="platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mconfig
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/ldso-arch -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/linux/ldso-arch.mk \
+	     LIB=ldso-arch \
+	     DEPS="platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mldso-arch
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/ld -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/os \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/os/lib/mk/x86_64/ld.mk \
+	     LIB=ld \
+	     DEPS="base-common.lib syscall.lib platform.lib  base.lib startup.lib syscall.lib platform.lib  cxx.lib platform.lib  base-common.lib syscall.lib platform.lib  syscall.lib platform.lib  cxx.lib platform.lib  startup.lib syscall.lib platform.lib  cxx.lib platform.lib  timed_semaphore.lib alarm.lib platform.lib  alarm.lib platform.lib  config.lib platform.lib  syscall.lib platform.lib  ldso-arch.lib platform.lib  ldso-startup.lib platform.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mld
+make --no-print-directory -C /home/paramesh/genode-14.08/mybuild/var/libcache/bionic_libc_x86 -f /home/paramesh/genode-14.08/repos/base/mk/lib.mk \
+	     REP_DIR=/home/paramesh/genode-14.08/repos/libports \
+	     LIB_MK=/home/paramesh/genode-14.08/repos/libports/lib/mk/bionic_libc_x86.mk \
+	     LIB=bionic_libc_x86 \
+	     DEPS="ldso-startup.lib platform.lib  ld.lib " \
+	     BUILD_BASE_DIR=/home/paramesh/genode-14.08/mybuild \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="ld bionic_libc_x86 bionic_libc_syscalls bionic_libm bionic_libstdc++ bionic_libdl bionic_c bionic"\
+	     INSTALL_DIR=/home/paramesh/genode-14.08/mybuild/bin
+[00;33m  Library [0mbionic_libc_x86
+    MERGE    bionic_libc_x86.lib.so

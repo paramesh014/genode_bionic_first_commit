@@ -1,0 +1,119 @@
+============================================
+PLATFORM_VERSION_CODENAME=AOSP
+PLATFORM_VERSION=4.4.3.43.43.43
+TARGET_PRODUCT=full
+TARGET_BUILD_VARIANT=eng
+TARGET_BUILD_TYPE=release
+TARGET_BUILD_APPS=
+TARGET_ARCH=arm
+TARGET_ARCH_VARIANT=armv7-a
+TARGET_CPU_VARIANT=generic
+TARGET_2ND_ARCH=
+TARGET_2ND_ARCH_VARIANT=
+TARGET_2ND_CPU_VARIANT=
+HOST_ARCH=x86_64
+HOST_OS=linux
+HOST_OS_EXTRA=Linux-3.13.0-32-generic-x86_64-with-Ubuntu-14.04-trusty
+HOST_BUILD_TYPE=release
+BUILD_ID=AOSP
+OUT_DIR=out
+============================================
+make: Entering directory `/home/paramesh/android'
+Import includes file: out/target/product/generic/obj/EXECUTABLES/bionic-benchmarks_intermediates/import_includes
+target thumb C++: bionic-benchmarks <= bionic/benchmarks/benchmark_main.cpp
+target thumb C++: bionic-benchmarks <= bionic/benchmarks/math_benchmark.cpp
+target thumb C++: bionic-benchmarks <= bionic/benchmarks/property_benchmark.cpp
+target thumb C++: bionic-benchmarks <= bionic/benchmarks/pthread_benchmark.cpp
+target thumb C++: bionic-benchmarks <= bionic/benchmarks/semaphore_benchmark.cpp
+target thumb C++: bionic-benchmarks <= bionic/benchmarks/stdio_benchmark.cpp
+target thumb C++: bionic-benchmarks <= bionic/benchmarks/string_benchmark.cpp
+target thumb C++: bionic-benchmarks <= bionic/benchmarks/time_benchmark.cpp
+target thumb C++: bionic-benchmarks <= bionic/benchmarks/unistd_benchmark.cpp
+target Executable: bionic-benchmarks (out/target/product/generic/obj/EXECUTABLES/bionic-benchmarks_intermediates/LINKED/bionic-benchmarks32)
+target Symbolic: bionic-benchmarks (out/target/product/generic/symbols/system/bin/bionic-benchmarks32)
+Export includes file: bionic/benchmarks/Android.mk -- out/target/product/generic/obj/EXECUTABLES/bionic-benchmarks_intermediates/export_includes
+target Strip: bionic-benchmarks (out/target/product/generic/obj/EXECUTABLES/bionic-benchmarks_intermediates/bionic-benchmarks32)
+Install: out/target/product/generic/system/bin/bionic-benchmarks32
+host Prebuilt: tzdata-host (out/host/linux-x86/obj/ETC/tzdata-host_intermediates/tzdata)
+Install: out/host/linux-x86/usr/share/zoneinfo/tzdata
+Import includes file: out/target/product/generic/obj/EXECUTABLES/linker-unit-tests_intermediates/import_includes
+target thumb C++: linker-unit-tests <= bionic/linker/tests/linked_list_test.cpp
+target thumb C++: linker-unit-tests <= bionic/linker/tests/linker_allocator_test.cpp
+target thumb C++: linker-unit-tests <= bionic/linker/tests/../linker_allocator.cpp
+target Executable: linker-unit-tests (out/target/product/generic/obj/EXECUTABLES/linker-unit-tests_intermediates/LINKED/linker-unit-tests32)
+target Symbolic: linker-unit-tests (out/target/product/generic/symbols/data/nativetest/linker-unit-tests/linker-unit-tests32)
+Export includes file: bionic/linker/tests/Android.mk -- out/target/product/generic/obj/EXECUTABLES/linker-unit-tests_intermediates/export_includes
+target Strip: linker-unit-tests (out/target/product/generic/obj/EXECUTABLES/linker-unit-tests_intermediates/linker-unit-tests32)
+Install: out/target/product/generic/data/nativetest/linker-unit-tests/linker-unit-tests32
+Export includes file: bionic/tests/Android.mk -- out/target/product/generic/obj/STATIC_LIBRARIES/libBionicUnwindTest_intermediates/export_includes
+Import includes file: out/target/product/generic/obj/STATIC_LIBRARIES/libBionicStandardTests_intermediates/import_includes
+target thumb C++: libBionicStandardTests <= bionic/tests/arpa_inet_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/buffer_tests.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/ctype_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/dirent_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/eventfd_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/fcntl_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/fenv_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/ftw_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/getauxval_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/getcwd_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/inttypes_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/libc_logging_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/libgen_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/locale_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/malloc_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_cos_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_cosf_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_exp_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_expf_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_log_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_logf_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_pow_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_powf_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_sin_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_sinf_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_sincos_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_sincosf_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_tan_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_tanf_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/math_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/mntent_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/netdb_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/pthread_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/regex_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sched_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/signal_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/stack_protector_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/stack_unwinding_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/stdatomic_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/stdint_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/stdio_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/stdlib_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/string_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/strings_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/stubs_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sstream_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_epoll_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_mman_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_resource_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_select_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_sendfile_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_socket_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_stat_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_statvfs_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_syscall_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_time_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_types_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/sys_vfs_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/system_properties_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/time_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/uchar_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/unistd_test.cpp
+target thumb C++: libBionicStandardTests <= bionic/tests/wchar_test.cpp
+Export includes file: bionic/tests/Android.mk -- out/target/product/generic/obj/STATIC_LIBRARIES/libBionicStandardTests_intermediates/export_includes
+Import includes file: out/target/product/generic/obj/STATIC_LIBRARIES/libBionicUnwindTest_intermediates/import_includes
+target thumb C: libBionicUnwindTest <= bionic/tests/stack_unwinding_test_impl.c
+target StaticLib: libBionicUnwindTest (out/target/product/generic/obj/STATIC_LIBRARIES/libBionicUnwindTest_intermediates/libBionicUnwindTest.a)
+preparing StaticLib: libBionicStandardTests [including  out/target/product/generic/obj/STATIC_LIBRARIES/libBionicUnwindTest_intermediates/libBionicUnwindTest.a]
+target StaticLib: libBionicStandardTests (out/target/product/generic/obj/STATIC_LIBRARIES/libBionicStandardTests_intermediates/libBionicStandardTests.a)
+make: Leaving directory `/home/paramesh/android'

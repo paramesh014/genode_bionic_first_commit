@@ -1,0 +1,84 @@
+Device drivers ported from the Linux kernel
+
+USB
+###
+
+Controller configuration
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The driver can be started using different or all USB controller types a platform
+offers (USB 1.0/2.0/3.0). Note that not all controllers are supported by all
+platforms.  Controllers can be enabled as attribute in the config node of the
+driver.  Supported attributes are: 'uhci', 'ehci', and 'xhci'.
+
+
+Configuration snippet to enable UHCI and EHCI
+
+! <config uhci="yes" ehci="yes">
+
+HID
+~~~
+
+Supports keyboard and mouse. A run script can be found under 'run/usb_hid.run'.
+
+Configuration snippet:
+
+!<start name="usb_drv">
+!  <resource name="RAM" quantum="3M"/>
+!  <provides><service name="Input"/></provides>
+!  <config uhci="yes" ehci="yes" xhci="yes">
+!    <hid/>
+!  </config>
+!</start>
+
+Note: It has been observed that certain 1.0 versions of Qemu do not generate
+mouse interrupts. The mouse driver should work correctly on Qemu 1.0.93 and
+above.
+
+Storage
+~~~~~~~
+
+Currently supports one USB storage device. Hot plugging has not been tested. A
+run script can be found under 'run/usb_storage.run'.
+
+Configuration snippet:
+
+!<start name="usb_drv">
+!  <resource name="RAM" quantum="2M"/>
+!  <provides> <service name="Block"/> </provides>
+!  <config><storage /></config>
+!</start uhci="yes">
+
+
+Network (Nic)
+~~~~~~~~~~~~~
+
+Configuration snippet:
+
+!<start name="usb_drv">
+!  <resource name="RAM" quantum="3M"/>
+!  <provides>
+!    <service name="Nic"/>
+!    <service name="Input"/>
+!  </provides>
+!  <config ehci="yes" xhci="yes">
+!    <nic mac="2e:60:90:0c:4e:01" />
+!    <hid/>
+!  </config>
+!</start>
+
+Please observe that this setup starts the HID and Nic service at the same time.
+Also there is the 'mac' attribute where one can specify the hardware address of
+the network interface. This is necessary in case the EEPROM of the network card
+cannot be accessed via the host controller making it impossible to retrieve the
+devices hardware address. If this is the case and no 'mac' attribute is given a
+fallback address will be assigned to the network device. Note that the fallback
+address will always be the same.
+
+LXIP
+####
+
+LXIP is a port of the Linux TCP/IP stack to Genode. It is build as a shared
+library named 'lxip.lib.so'. The IP stack can be interfaced using Genode's
+version of 'libc' by linking your application to 'lxip_libc' plugin in your
+'target.mk' file.

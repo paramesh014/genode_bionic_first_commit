@@ -1,0 +1,14 @@
+z/OS implementation
+===================
+
+The code in this directory is needed to compile the CPU Jitter random number
+generator for z/OS. Consider the following hints:
+
+- copy gettime.s into directory with jitterentropy-base.c
+
+- add "#pragma LANGLVL(EXTENDED) RUNOPTS(ALL31(ON),TRAP(ON),TERM(DUMP))" to every C file that is going to be compiled
+  as a first statement  before any C code statement
+
+- copy jitterentropy-base-user.h over the same file in jitterentropy/
+
+- use the attached Makefile

@@ -1,0 +1,33 @@
+Kernel files
+------------
+jitterentropy-base-kernel.h -- Kernel helper functions needed for entropy
+			       collection
+
+jitterentropy-dbg.c        -- DebugFS interface allow user space to interact
+			      with entropy collector, defines 2 DRNGs
+			      and interacts with the DRNG handler (note, that is
+			      intended to support debugging only, file does not
+			      need to be compiled, the switch is
+			      CONFIG_JITTERENTROPY_DBG)
+			      (design given in appendix B)
+jitterentropy-dbg.h        -- internal API for jitterentropy-dbg-kernel.c
+			      exported to other C files
+
+jitterentropy-drng.c        -- implementation of the DRNG handling for the
+			       entropy collector and this C file implements the
+			       kernel module logic
+			       (design given in appendix B)
+jitterentropy-drng.h        -- DRNG data structure and internal API exported
+			       by the DRNG component
+
+jitterentropy-kcapi.c        -- Register regular and strong DRNG with kernel
+				crypto API to provide a the CPU Jitter RNG
+				whitenend by a DRNG as a non-physical true
+				random number generator to the kernel. In
+				addition, provide direct access to the CPU
+				Jitter RNG.
+				(design given in appendix B)
+jitterentropy-kcapi.h        -- export the init and exit functions
+
+Makefile -- kernel make file
+

@@ -1,0 +1,115 @@
+diff --git a/configure.ac b/configure.ac
+index 079951d..d49e081 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1331,8 +1331,9 @@ fi
+ 
+ LIST_MEMBER(linux, $random_modules)
+ if test "$found" = "1" ; then
+-   GCRYPT_RANDOM="$GCRYPT_RANDOM rndlinux.lo"
++   GCRYPT_RANDOM="$GCRYPT_RANDOM rndlinux.lo jitterentropy-gcry-user.lo jitterentropy-base.lo"
+    AC_DEFINE(USE_RNDLINUX, 1, [Defined if the /dev/random RNG should be used.])
++   LIBS="$LIBS -lrt"
+ fi
+ 
+ LIST_MEMBER(unix, $random_modules)
+diff --git a/random/Makefile.am b/random/Makefile.am
+index c9d587a..4aa2573 100644
+--- a/random/Makefile.am
++++ b/random/Makefile.am
+@@ -45,6 +45,7 @@ endif USE_RANDOM_DAEMON
+ 
+ EXTRA_librandom_la_SOURCES = \
+ rndlinux.c \
++jitterentropy-gcry-user.c jitterentropy-base.c \
+ rndegd.c \
+ rndunix.c \
+ rndw32.c  \
+diff --git a/random/rand-internal.h b/random/rand-internal.h
+index f59a102..a1ac9e7 100644
+--- a/random/rand-internal.h
++++ b/random/rand-internal.h
+@@ -144,6 +144,11 @@ size_t _gcry_rndhw_poll_slow (void (*add)(const void*, size_t,
+                                           enum random_origins),
+                               enum random_origins origin);
+ 
++/*-- jitterentropy-gcry-user.c --*/
++int _gcry_jent_gather_random (void (*add)(const void*, size_t,
++                                          enum random_origins),
++                              enum random_origins origin,
++                              size_t length, int level );
+ 
+ 
+ #endif /*G10_RAND_INTERNAL_H*/
+diff --git a/random/random.h b/random/random.h
+index aae07ab..1e27f12 100644
+--- a/random/random.h
++++ b/random/random.h
+@@ -65,4 +65,9 @@ int _gcry_daemon_randomize (const char *socketname,
+                             enum gcry_random_level level);
+ #endif /*USE_RANDOM_DAEMON*/
+ 
++#ifdef USE_RNDLINUX
++int _gcry_jent_init(void);
++void _gcry_jent_free(void);
++#endif /*USE_RNDLINUX*/
++
+ #endif /*G10_RANDOM_H*/
+diff --git a/random/rndlinux.c b/random/rndlinux.c
+index b304cc9..0bbfa21 100644
+--- a/random/rndlinux.c
++++ b/random/rndlinux.c
+@@ -109,6 +109,12 @@ _gcry_rndlinux_gather_random (void (*add)(const void*, size_t,
+   if (length > 1)
+     length -= n_hw;
+ 
++  /* check whether the CPU Jitter entropy collector is available and use
++   * seed from it - if it returns 0, it was successful and we do not need
++   * to use seed from /dev/?random */
++  if(!_gcry_jent_gather_random(add, origin, length, level))
++    return 0;
++
+   /* Open the requested device.  */
+   if (level >= 2)
+     {
+diff --git a/src/gcrypt.h.in b/src/gcrypt.h.in
+index f472b02..5139902 100644
+--- a/src/gcrypt.h.in
++++ b/src/gcrypt.h.in
+@@ -302,7 +302,8 @@ enum gcry_ctl_cmds
+     GCRYCTL_DISABLE_HWF = 63,
+     GCRYCTL_SET_ENFORCED_FIPS_FLAG = 64,
+     GCRYCTL_SET_PREFERRED_RNG_TYPE = 65,
+-    GCRYCTL_GET_CURRENT_RNG_TYPE = 66
++    GCRYCTL_GET_CURRENT_RNG_TYPE = 66,
++    GCRYCTL_SET_CPU_JITTER_ENTROPY = 67
+   };
+ 
+ /* Perform various operations defined by CMD. */
+diff --git a/src/global.c b/src/global.c
+index f873897..fe60ee6 100644
+--- a/src/global.c
++++ b/src/global.c
+@@ -687,6 +687,22 @@ _gcry_vcontrol (enum gcry_ctl_cmds cmd, va_list arg_ptr)
+       }
+       break;
+ 
++    case GCRYCTL_SET_CPU_JITTER_ENTROPY:
++#ifdef USE_RNDLINUX
++      if(va_arg (arg_ptr, int))
++      {
++        if(_gcry_jent_init())
++          err = GPG_ERR_ENOMEM;
++      }
++      else
++      {
++        _gcry_jent_free();
++      }
++#else /*USE_RNDLINUX*/
++      err = gpg_error (GPG_ERR_NOT_SUPPORTED);
++#endif /*USE_RNDLINUX*/
++      break;
++
+     default:
+       _gcry_set_preferred_rng_type (0);
+       err = GPG_ERR_INV_OP;

@@ -1,0 +1,23 @@
+This repository contains the Device Driver Environment for the "donator OS"
+Linux 2.6.20. DDE Linux 2.6 is based on code from the TUD:OS project. The
+original code is available at the official website.
+
+:TUD:OS website: [http://www.tudos.org/]
+
+Currently available drivers are:
+
+* ALSA sound
+* Intel GPUs
+* MadWifi wireless network cards
+  * This driver needs the 'uudecode' tool.
+
+
+DDE References
+==============
+
+* [http://os.inf.tu-dresden.de/papers_ps/vogt-beleg.pdf]
+* [http://os.inf.tu-dresden.de/papers_ps/friebel-diplom.pdf]
+* [http://os.inf.tu-dresden.de/papers_ps/menzer-diplom.pdf]
+* [http://os.inf.tu-dresden.de/papers_ps/menzer-beleg.pdf]
+* [http://os.inf.tu-dresden.de/papers_ps/griessbach-diplom.pdf]
+* [http://os.inf.tu-dresden.de/papers_ps/helmuth-diplom.pdf]

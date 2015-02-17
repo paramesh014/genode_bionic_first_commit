@@ -1,0 +1,43 @@
+#BIONIC_PORT_DIR := $(call select_from_ports,bionic)
+#BIONIC_DIR      := $(BIONIC_PORT_DIR)/src/lib/bionic
+include $(REP_DIR)/lib/mk/bionic_libc_src.inc
+include $(REP_DIR)/lib/mk/bionic_libc_includes.inc
+
+#LIBS := bionic_libc_stdio
+
+tz_src := \
+	upstream-openbsd/lib/libc/time/wcsftime.c \
+	tzcode/difftime.c \
+	tzcode/localtime.c \
+	tzcode/asctime.c \
+	tzcode/strptime.c \
+	#tzcode/strftime.c \
+
+
+LOCAL_CFLAGS := \
+    -fvisibility=hidden \
+    -fPIC \
+    $(libc_common_cflags) \
+
+# Don't use ridiculous amounts of stack.
+LOCAL_CFLAGS += -DALL_STATE
+# Include tzsetwall, timelocal, timegm, time2posix, and posix2time.
+LOCAL_CFLAGS += -DSTD_INSPIRED
+# The name of the tm_gmtoff field in our struct tm.
+LOCAL_CFLAGS += -DTM_GMTOFF=tm_gmtoff
+# Where we store our tzdata.
+#LOCAL_CFLAGS += -DTZDIR=\"/system/usr/share/zoneinfo\"
+# Include timezone and daylight globals.
+LOCAL_CFLAGS += -DUSG_COMPAT=1
+LOCAL_CFLAGS += -DNO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU
+LOCAL_CFLAGS += -Dlint
+LOCAL_CLANG := $(use_clang)
+
+SRC_C += $(tz_src) 
+#CC_OPT += $(LOCAL_CFLAGS)
+CC_C_OPT += $(libc_common_conlyflags)
+CC_CXX_OPT = $(libc_common_cppflags)
+
+ 
+vpath %.c $(LOCAL_PATH)/
+

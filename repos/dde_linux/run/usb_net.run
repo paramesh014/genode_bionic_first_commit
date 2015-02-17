@@ -1,0 +1,134 @@
+#
+# \brief  Test for using the lwIP TCP/IP stack over USB
+# \author Sebastian Sumpf
+# \date   2012-07-06
+#
+# This test case executes a small HTTP server, it has been used on PandaBoard
+# hardware only, though it should execute but not do anything on other hardware
+#
+
+#
+# Build
+#
+
+set build_components {
+	core init
+	drivers/pci drivers/timer drivers/usb
+	test/lwip/http_srv
+}
+
+lappend_if [have_spec acpi]             build_components drivers/acpi
+lappend_if [have_spec pci]              build_components drivers/pci/device_pd
+lappend_if [have_spec platform_arndale] build_components drivers/platform
+lappend_if [have_spec gpio]             build_components drivers/gpio
+
+build $build_components
+
+create_boot_directory
+
+#
+# Generate config
+#
+
+set config {
+<config verbose="yes">
+	<parent-provides>
+		<service name="ROM"/>
+		<service name="RAM"/>
+		<service name="IRQ"/>
+		<service name="IO_MEM"/>
+		<service name="IO_PORT"/>
+		<service name="CAP"/>
+		<service name="PD"/>
+		<service name="RM"/>
+		<service name="CPU"/>
+		<service name="LOG"/>
+		<service name="SIGNAL"/>
+	</parent-provides>
+	<default-route>
+		<any-service> <parent/> <any-child/> </any-service>
+	</default-route>
+	<start name="timer">
+		<resource name="RAM" quantum="1M"/>
+		<provides> <service name="Timer"/> </provides>
+	</start>
+	<start name="usb_drv">
+		<resource name="RAM" quantum="12M"/>
+		<provides>
+			<service name="Nic"/>
+		</provides>
+		<config uhci="no" ehci="yes" xhci="yes">
+			<nic mac="02:00:00:00:01:01" />
+		</config>
+	</start>
+	<start name="test-lwip_httpsrv">
+		<resource name="RAM" quantum="2M"/>
+		<config>
+			<libc stdout="/dev/log">
+				<vfs> <dir name="dev"> <log/> </dir> </vfs>
+			</libc>
+		</config>
+	</start>}
+
+append_if [have_spec acpi] config {
+	<start name="acpi">
+		<resource name="RAM" quantum="10M"/>
+		<binary name="acpi_drv"/>
+		<provides>
+			<service name="PCI"/>
+			<service name="IRQ" />
+		</provides>
+		<route>
+			<service name="PCI"> <any-child /> </service>
+			<any-service> <parent/> <any-child /> </any-service>
+		</route>
+	</start>}
+
+append_if [have_spec platform_arndale] config {
+		<start name="platform_drv">
+			<resource name="RAM" quantum="1M"/>
+			<provides><service name="Regulator"/></provides>
+		</start>}
+
+append_if [have_spec gpio] config {
+	<start name="gpio_drv">
+		<resource name="RAM" quantum="4M"/>
+		<provides><service name="Gpio"/></provides>
+		<config/>
+	</start>}
+
+append_if [expr ![have_spec acpi] && [have_spec pci]] config {
+	<start name="pci_drv">
+		<resource name="RAM" quantum="3M"/>
+		<provides> <service name="PCI"/> </provides>
+	</start> }
+
+append config {
+</config>
+}
+
+install_config $config
+
+#
+# Boot modules
+#
+
+# generic modules
+set boot_modules {
+	core init timer
+	usb_drv
+	ld.lib.so libc.lib.so lwip.lib.so test-lwip_httpsrv
+}
+
+lappend_if [have_spec acpi]             boot_modules acpi_drv
+lappend_if [have_spec pci]              boot_modules pci_drv
+lappend_if [have_spec nova]             boot_modules pci_device_pd
+lappend_if [have_spec platform_arndale] boot_modules platform_drv
+lappend_if [have_spec gpio]             boot_modules gpio_drv
+
+build_boot_image $boot_modules
+
+append qemu_args " -m 256 -nographic"
+
+run_genode_until forever
+# vi: set ft=tcl :

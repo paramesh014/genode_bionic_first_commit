@@ -1,0 +1,6 @@
+REPOSITORIES  = $(GENODE_DIR)/repos/base-nova
+
+#
+# The current NOVA kernel build is optimized for Intel Core2 Duo.
+#
+QEMU_OPT     += -cpu core2duo

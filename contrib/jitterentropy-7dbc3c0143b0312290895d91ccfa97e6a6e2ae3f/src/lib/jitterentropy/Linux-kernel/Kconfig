@@ -1,0 +1,46 @@
+config CRYTPO_CPU_JITTERENTROPY_DRNG
+	tristate "DRNG seeded by CPU Jitter random number generator"
+	select CRYPTO_CPU_JITTERENTROPY_KCAPI
+	depends on CRYPTO
+	depends on CRYTPO_CPU_JITTERENTROPY
+	help
+	  CPU Jitter random number generator
+
+if CRYTPO_CPU_JITTERENTROPY_DRNG
+
+config CRYPTO_CPU_JITTERENTROPY_KCAPI
+	tristate
+	select CRYPTO_ANSI_CPRNG
+	help
+	 Enable regular and strong deterministic random
+	 number generator seeded by the CPU Jitter
+	 random number generator. You will surely want
+	 to enable this option as otherwise the
+	 CPU Jitter random number generator is pretty
+	 meaningless as it does not have general
+	 purpose interface to offer its services to
+	 the remainder of the kernel.
+
+config CRYPTO_CPU_JITTERENTROPY_DBG
+	tristate
+	depends on CRYTPO_CPU_JITTERENTROPY
+	help
+	 Enable the DebugFS interface of the CPU Jitter
+	 random number generator. It is solely intended
+	 to aid testing and for performing statistical
+	 and entropy analyses. You should say no
+	 unless you know what you are doing.
+
+config CRYPTO_CPU_JITTERENTROPY_STAT
+	tristate
+	depends on CRYTPO_CPU_JITTERENTROPY_DBG
+	help
+	 Enable the statistics analysis code of the CPU
+	 Jitter random number generator. WARNING: When
+	 enabling this code, the RNG is NOT considered
+	 to be secure! It is solely inteneded to analyze
+	 the statistical qualities of the RNG and its
+	 entropy behavior. You should say NO
+	 unless you know what you are doing.
+
+endif #CRYTPO_CPU_JITTERENTROPY

@@ -1,0 +1,6 @@
+BIONIC_LIBC_PORT_DIR := $(call select_from_ports,bionic)
+BIONIC_LIBC_DIR      := $(BIONIC_LIBC_PORT_DIR)/src/lib/bionic/libc
+
+LIBS +=  bionic_c
+
+SHARED_LIB = yes

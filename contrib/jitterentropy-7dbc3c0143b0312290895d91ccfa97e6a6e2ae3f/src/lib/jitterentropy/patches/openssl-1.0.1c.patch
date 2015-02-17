@@ -1,0 +1,84 @@
+diff -purN openssl-1.0.1c.orig/crypto/rand/Makefile openssl-1.0.1c/crypto/rand/Makefile
+--- openssl-1.0.1c.orig/crypto/rand/Makefile	2013-04-29 15:46:45.370180322 +0200
++++ openssl-1.0.1c/crypto/rand/Makefile	2013-04-29 15:44:25.582178225 +0200
+@@ -18,9 +18,11 @@ APPS=
+ 
+ LIB=$(TOP)/libcrypto.a
+ LIBSRC=md_rand.c randfile.c rand_lib.c rand_err.c rand_egd.c \
+-	rand_win.c rand_unix.c rand_os2.c rand_nw.c
++	rand_win.c rand_unix.c rand_os2.c rand_nw.c \
++	jitterentropy-base.c
+ LIBOBJ=md_rand.o randfile.o rand_lib.o rand_err.o rand_egd.o \
+-	rand_win.o rand_unix.o rand_os2.o rand_nw.o
++	rand_win.o rand_unix.o rand_os2.o rand_nw.o \
++	jitterentropy-base.o
+ 
+ SRC= $(LIBSRC)
+ 
+diff -purN openssl-1.0.1c.orig/crypto/rand/rand_unix.c openssl-1.0.1c/crypto/rand/rand_unix.c
+--- openssl-1.0.1c.orig/crypto/rand/rand_unix.c	2013-04-29 15:46:22.794179984 +0200
++++ openssl-1.0.1c/crypto/rand/rand_unix.c	2013-04-29 17:11:47.162256875 +0200
+@@ -133,6 +133,10 @@
+ # define FD_SETSIZE (8*sizeof(fd_set))
+ #endif
+ 
++#ifdef JITTERENTROPY
++#include "jitterentropy.h"
++#endif
++
+ #if defined(OPENSSL_SYS_VOS)
+ 
+ /* The following algorithm repeatedly samples the real-time clock
+@@ -238,7 +242,7 @@ int RAND_poll(void)
+ {
+ 	unsigned long l;
+ 	pid_t curr_pid = getpid();
+-#if defined(DEVRANDOM) || defined(DEVRANDOM_EGD)
++#if defined(DEVRANDOM) || defined(DEVRANDOM_EGD) || defined(JITTERENTROPY)
+ 	unsigned char tmpbuf[ENTROPY_NEEDED];
+ 	int n = 0;
+ #endif
+@@ -252,6 +256,29 @@ int RAND_poll(void)
+ 	static const char *egdsockets[] = { DEVRANDOM_EGD, NULL };
+ 	const char **egdsocket = NULL;
+ #endif
++#ifdef JITTERENTROPY
++	struct rand_data *entropy_collector;
++	int ret;
++
++	ret = jent_entropy_init();
++	if(!ret)
++	{
++		entropy_collector = jent_entropy_collector_alloc(1, 0);
++		if(entropy_collector)
++		{
++			n = jent_read_entropy(entropy_collector, tmpbuf, sizeof(tmpbuf));
++			if(0 < n)
++			{
++				RAND_add(tmpbuf,sizeof tmpbuf,(double)n);
++				OPENSSL_cleanse(tmpbuf,n);
++			}
++			jent_entropy_collector_free(entropy_collector);
++			return 1;
++		}
++	}
++	/* some error occurred, fall through to other possibilities */
++
++#endif
+ 
+ #ifdef DEVRANDOM
+ 	memset(randomstats,0,sizeof(randomstats));
+Binärdateien openssl-1.0.1c.orig/crypto/rand/.rand_unix.c.swp und openssl-1.0.1c/crypto/rand/.rand_unix.c.swp sind verschieden.
+diff -purN openssl-1.0.1c.orig/e_os.h openssl-1.0.1c/e_os.h
+--- openssl-1.0.1c.orig/e_os.h	2013-04-29 15:46:22.842179984 +0200
++++ openssl-1.0.1c/e_os.h	2013-04-29 15:47:39.834181140 +0200
+@@ -87,6 +87,9 @@ extern "C" {
+  * listed in DEVRANDOM did not return enough entropy. */
+ #define DEVRANDOM_EGD "/var/run/egd-pool","/dev/egd-pool","/etc/egd-pool","/etc/entropy"
+ #endif
++#ifndef JITTERENTROPY
++#define JITTERENTROPY
++#endif
+ 
+ #if defined(OPENSSL_SYS_VXWORKS)
+ #  define NO_SYS_PARAM_H
